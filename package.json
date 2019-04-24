@@ -1,0 +1,45 @@
+{
+  "name": "solidity-typescript-boilerplate",
+  "version": "0.0.3",
+  "scripts": {
+    "clean": "if [ -d \"test\" ]; then rm -r test; fi;",
+    "test": "if [ -d \"test\" ]; then $npm_execpath run warn; else $npm_execpath run test-ts; fi;",
+    "coverage": "if [ -d \"test\" ]; then $npm_execpath run warn; else $npm_execpath run coverage-ts; fi;",
+    "merge": "sol-merger \"./contracts/**/*.sol\"",
+    "warn": "echo \"Refusing to overwrite 'test' directory. Run '\\033[1;33m$npm_execpath run clean\\033[0m'.\n\"",
+    "test-ts": "trap \"$npm_execpath run clean\" INT TERM; ($npm_execpath run bindings:ts && tsc && truffle test); $npm_execpath run clean",
+    "coverage-ts": "trap \"$npm_execpath run clean\" INT TERM; ($npm_execpath run bindings:ts && tsc && solidity-coverage); $npm_execpath run clean",
+    "bindings:ts": "truffle compile && ./node_modules/.bin/abi-gen --abis 'build/contracts/*.json' --output ./test-ts/typings/bindings --template './test-ts/typings/bindings/templates/contract.handlebars' --partials './test-ts/typings/bindings/templates/partials/*.handlebars' 1> /dev/null",
+    "bindings:go": "solc --allow-paths . --combined-json bin,abi,userdoc,devdoc,metadata $(find contracts -type f -name '*.sol') | abigen -pkg bindings --out bindings.go --abi -",
+    "deployToKovan": "truffle migrate --network kovan && $npm_execpath run merge .merged/kovan"
+  },
+  "dependencies": {
+    "openzeppelin-solidity": "2.2.0"
+  },
+  "devDependencies": {
+    "@0xproject/abi-gen": "^1.0.13",
+    "@types/chai": "^4.1.7",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.13.7",
+    "any-promise": "^1.3.0",
+    "bignumber.js": "^8.1.1",
+    "bn.js": "^4.11.8",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "git://github.com/negaex/chai-bignumber.git#master",
+    "coveralls": "^3.0.3",
+    "dotenv": "^7.0.0",
+    "eth-gas-reporter": "^0.1.12",
+    "ganache-cli": "^6.4.3",
+    "sol-merger": "^0.1.3",
+    "solc": "0.5.7",
+    "solidity-coverage": "^0.5.11",
+    "truffle": "5.0.13",
+    "truffle-hdwallet-provider": "^1.0.7",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5",
+    "underscore": "^1.9.1",
+    "web3": "^1.0.0-beta.35"
+  }
+}
