@@ -3926,7 +3926,7 @@ sol-merger@^0.1.4:
     fs-extra "^7.0.1"
     glob "^7.1.2"
 
-solc@0.5.0, solc@^0.5.9:
+solc@0.5.0, solc@^0.5.8:
   version "0.5.9"
   resolved "https://registry.yarnpkg.com/solc/-/solc-0.5.9.tgz#ec513bbbbb8b46b4b4d1a6a2764c50f34877fffc"
   integrity sha512-IyCEXnSbpb3ii8FkgNu0QDtCtnvyGCtYNQejOaIZi6/9/CLJ2ozDHN2oNG26HfGZ8op9yDgqC+5SHziFvkRZuA==
@@ -4358,10 +4358,10 @@ truffle-hdwallet-provider@^1.0.7:
     web3 "1.0.0-beta.37"
     websocket "^1.0.28"
 
-truffle-plugin-verify@^0.2.0-alpha1:
-  version "0.2.0-alpha1"
-  resolved "https://registry.yarnpkg.com/truffle-plugin-verify/-/truffle-plugin-verify-0.2.0-alpha1.tgz#9339673254e5d8562e3d331de528c73652c6584f"
-  integrity sha512-PSSCmYQJBeCz6CO/DpWlwGeJObL2KjZW7sk4Xj6MN2WZXoSW4+e/v9NbTzljkgdGw2+eOkUVV/qPAOjVEo3F3g==
+truffle-plugin-verify@^0.2.0-alpha2:
+  version "0.2.0-alpha2"
+  resolved "https://registry.yarnpkg.com/truffle-plugin-verify/-/truffle-plugin-verify-0.2.0-alpha2.tgz#89d2f004a5a00ddb6c335305c8da3c5c63c1627b"
+  integrity sha512-EHTmZDPadQRhAgBDJWLB2J7/JK0dFRSxZRC4Vpt/aMIurmn0QwgKjW79bzR5DMJJ3kcsmOqfdgxdTqOTNMLs3g==
   dependencies:
     await-sleep "0.0.1"
     axios "^0.18.0"
