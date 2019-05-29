@@ -7,6 +7,7 @@
     "test": "yarn run generate && truffle test",
     "bindings:ts": "truffle compile && typechain --target web3-1.0.0 './build/**/*.json'",
     "bindings:go": "solc --allow-paths . --combined-json bin,abi,userdoc,devdoc,metadata $(find contracts -type f -name '*.sol') | abigen -pkg bindings --out bindings.go --abi -",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "deploy": "truffle migrate --skipDryRun --network $NETWORK",
     "verify": "truffle run verify --network $NETWORK",
     "postinstall": "patch-package"
