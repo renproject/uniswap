@@ -46,10 +46,17 @@ Add a `.env`, filling in the mnemonic and Kovan ethereum node (e.g. Infura):
 ```sh
 MNEMONIC="..."
 KOVAN_ETHEREUM_NODE="..."
+ETHERSCAN_KEY="..."
 ```
 
 Deploy to Kovan:
 
 ```sh
-yarn deployToKovan
+NETWORK=kovan yarn run deploy
+```
+
+## Verifying Contract Code
+
+```sh
+NETWORK=kovan yarn run verify YourContractName
 ```

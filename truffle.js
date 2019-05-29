@@ -33,7 +33,21 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: "0.5.9"
+      version: "0.5.9",
+      settings: {
+        evmVersion: "petersburg",
+        optimizer: {
+          enabled: true,
+          runs: 200,
+        }
+      }
     }
-  }
+  },
+  plugins: [
+    "truffle-plugin-verify"
+  ],
+  api_keys: {
+    etherscan: process.env.ETHERSCAN_KEY,
+  },
+  contracts_build_directory: "./build/contracts",
 };

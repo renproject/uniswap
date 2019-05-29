@@ -7,7 +7,8 @@
     "test": "yarn run generate && truffle test",
     "bindings:ts": "truffle compile && typechain --target web3-1.0.0 './build/**/*.json'",
     "bindings:go": "solc --allow-paths . --combined-json bin,abi,userdoc,devdoc,metadata $(find contracts -type f -name '*.sol') | abigen -pkg bindings --out bindings.go --abi -",
-    "deployToKovan": "truffle migrate --network kovan && $npm_execpath run merge .merged/kovan",
+    "deploy": "truffle migrate --skipDryRun --network $NETWORK",
+    "verify": "truffle run verify --network $NETWORK",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -34,6 +35,7 @@
     "solidity-coverage": "github:rotcivegaf/solidity-coverage#5875f5b7bc74d447f3312c9c0e9fc7814b482477",
     "truffle": "^5.0.19",
     "truffle-hdwallet-provider": "^1.0.7",
+    "truffle-plugin-verify": "^0.2.0-alpha1",
     "truffle-typings": "^1.0.6",
     "ts-generator": "^0.0.8",
     "ts-node": "^8.2.0",
