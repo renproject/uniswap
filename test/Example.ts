@@ -12,7 +12,7 @@ contract("Example", (accounts) => {
         example = await Example.new();;
     });
 
-    it("Can call setCompleted", async () => {
+    it("Can call increment", async () => {
         await example.increment({ from: accounts[0] });
     });
 });
