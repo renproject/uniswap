@@ -1,8 +1,8 @@
+/* tslint:disable */
+
 // Type definitions for chai-bignumber 0.0.0
 // Project: https://github.com/negaex/chai-bignumber/
 // Definitions by: negaex <https://github.com/negaex>,
-
-/// <reference types="chai" />
 
 declare module "chai-bignumber" {
     function chaiBigNumber(bignumber: any): (chai: any, utils: any) => void;
