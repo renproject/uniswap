@@ -4,7 +4,7 @@ import { ExampleInstance } from "../types/truffle-contracts";
 
 const Example = artifacts.require("Example");
 
-contract("CompatibleERC20", (accounts) => {
+contract("Example", (accounts) => {
 
     let example: ExampleInstance;
 
