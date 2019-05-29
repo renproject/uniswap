@@ -49,7 +49,10 @@ const increaseTimeHelper = async (seconds: number) => {
     });
 }
 
-const getCurrentTimestamp = async (): Promise<number> => (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
+const getCurrentTimestamp = async (): Promise<number> => {
+    const ts = new BigNumber((await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp)
+    return ts.toNumber();
+};
 
 export const increaseTime = async (seconds: number) => {
     let currentTimestamp = await getCurrentTimestamp();
