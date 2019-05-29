@@ -1,18 +1,18 @@
 import "./helper/testUtils";
 
-import { ExampleContract } from "./typings/bindings/example";
+import { ExampleInstance } from "../types/truffle-contracts";
 
 const Example = artifacts.require("Example");
 
-contract("CompatibleERC20", (accounts) => {
+contract("Example", (accounts) => {
 
-    let example: ExampleContract;
+    let example: ExampleInstance;
 
     before(async () => {
         example = await Example.new();;
     });
 
-    it("Can call setCompleted", async () => {
+    it("Can call increment", async () => {
         await example.increment({ from: accounts[0] });
     });
 });

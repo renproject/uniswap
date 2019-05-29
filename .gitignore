@@ -10,7 +10,6 @@ coverage.json
 .env
 /build
 /.merged
-/test
 local_*
-test-ts/typings/bindings/*.ts
 bindings.go
+types

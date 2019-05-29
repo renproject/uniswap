@@ -1,3 +1,4 @@
+require("ts-node/register");
 require("dotenv").config();
 
 const HDWalletProvider = require("truffle-hdwallet-provider");
@@ -8,7 +9,7 @@ module.exports = {
   networks: {
     kovan: {
       // @ts-ignore
-      provider: new HDWalletProvider(process.env.MNEMONIC, process.env.KOVAN_ETHEREUM_NODE),
+      provider: () => new HDWalletProvider(process.env.MNEMONIC, process.env.KOVAN_ETHEREUM_NODE),
       network_id: 42,
       gas: 6721975,
       gasPrice: 10 * GWEI,
@@ -32,7 +33,21 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: "0.5.7"
+      version: "0.5.9",
+      settings: {
+        evmVersion: "petersburg",
+        optimizer: {
+          enabled: true,
+          runs: 200,
+        }
+      }
     }
-  }
+  },
+  plugins: [
+    "truffle-plugin-verify"
+  ],
+  api_keys: {
+    etherscan: process.env.ETHERSCAN_KEY,
+  },
+  contracts_build_directory: "./build/contracts",
 };

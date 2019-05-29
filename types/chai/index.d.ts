@@ -1,3 +1,5 @@
+/* tslint:disable */
+
 // Type definitions for chai-bignumber 0.0.0
 // Project: https://github.com/negaex/chai-bignumber/
 // Definitions by: negaex <https://github.com/negaex>,
