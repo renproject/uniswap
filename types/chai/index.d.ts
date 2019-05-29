@@ -4,6 +4,8 @@
 // Project: https://github.com/negaex/chai-bignumber/
 // Definitions by: negaex <https://github.com/negaex>,
 
+/// <reference types="chai" />
+
 declare module "chai-bignumber" {
     function chaiBigNumber(bignumber: any): (chai: any, utils: any) => void;
 
