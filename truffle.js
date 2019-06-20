@@ -49,5 +49,5 @@ module.exports = {
   api_keys: {
     etherscan: process.env.ETHERSCAN_KEY,
   },
-  contracts_build_directory: "./build/contracts",
+  contracts_build_directory: `./build/${process.env.NETWORK || "development"}`,
 };
