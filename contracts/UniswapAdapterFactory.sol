@@ -1,4 +1,4 @@
-pragma solidity 0.5.9;
+pragma solidity ^0.5.8;
 
 import "./UniswapExchangeAdapter.sol";
 import "./UniswapReserveAdapter.sol";

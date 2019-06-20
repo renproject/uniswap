@@ -1,4 +1,4 @@
-pragma solidity 0.5.9;
+pragma solidity ^0.5.8;
 
 import "darknode-sol/contracts/Shifter/Shifter.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
