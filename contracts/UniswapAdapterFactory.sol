@@ -32,9 +32,9 @@ contract UniswapAdapterFactory {
         {
         exchange = factory.createExchange(_token);
         Shifter shifter = Shifter(registry.getShifterByToken(_token));
-        exchangeAdapterAddress = new UniswapExchangeAdapter(UniswapExchange(exchange), shifter);
+        exchangeAdapterAddress = new UniswapExchangeAdapter(IUniswapExchange(exchange), shifter);
         exchangeAdapters[_token] = exchangeAdapterAddress;
-        exchangeReserveAddress = new UniswapReserveAdapter(UniswapReserve(exchange), shifter);
+        exchangeReserveAddress = new UniswapReserveAdapter(IUniswapReserve(exchange), shifter);
         reserveAdapters[_token] = exchangeReserveAddress;
     }
 

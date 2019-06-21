@@ -4,9 +4,9 @@ import "darknode-sol/contracts/Shifter/Shifter.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 contract UniswapReserveAdapter {
-    UniswapReserve public reserve;  
+    IUniswapReserve public reserve;  
     Shifter public shifter;  
-    constructor(UniswapReserve _reserve, Shifter _shifter) public {
+    constructor(IUniswapReserve _reserve, Shifter _shifter) public {
         reserve = _reserve;
         shifter = _shifter;
     }
@@ -19,6 +19,7 @@ contract UniswapReserveAdapter {
             payable 
             returns (uint256  uniMinted) 
         {
+        require(false, "is able to print");
         bytes32 pHash = keccak256(abi.encode(_minLiquidity, _deadline, _refundAddress));
         uint256 amount = shifter.shiftIn(_amount, _nHash, pHash, _sig);
 
@@ -53,7 +54,7 @@ contract UniswapReserveAdapter {
     }
 }
 
-interface UniswapReserve {
+interface IUniswapReserve {
     function addLiquidity(
         uint256 min_liquidity, 
         uint256 max_tokens,

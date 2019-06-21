@@ -4,9 +4,9 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "darknode-sol/contracts/Shifter/Shifter.sol";
 
 contract UniswapExchangeAdapter {
-    UniswapExchange public exchange;  
+    IUniswapExchange public exchange;  
     Shifter public shifter;  
-    constructor(UniswapExchange _exchange, Shifter _shifter) public {
+    constructor(IUniswapExchange _exchange, Shifter _shifter) public {
         exchange = _exchange;
         shifter = _shifter;
     }
@@ -40,7 +40,7 @@ contract UniswapExchangeAdapter {
     }
 }
 
-interface UniswapExchange {
+interface IUniswapExchange {
     function ethToTokenSwapInput(
         uint256 min_tokens,
         uint256 deadline
