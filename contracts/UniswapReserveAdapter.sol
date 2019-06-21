@@ -19,9 +19,8 @@ contract UniswapReserveAdapter {
             payable 
             returns (uint256  uniMinted) 
         {
-        require(false, "is able to print");
         bytes32 pHash = keccak256(abi.encode(_minLiquidity, _deadline, _refundAddress));
-        uint256 amount = shifter.shiftIn(_amount, _nHash, pHash, _sig);
+        uint256 amount = shifter.shiftIn(_amount, _nHash, _sig, pHash);
 
         if (block.number > _deadline) {
             shifter.shiftOut(_refundAddress, amount);

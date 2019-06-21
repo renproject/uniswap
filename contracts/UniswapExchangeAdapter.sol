@@ -28,7 +28,7 @@ contract UniswapExchangeAdapter {
     {
         require(_minEth > _relayFee);
         bytes32 pHash = keccak256(abi.encode(_minEth, _deadline, _refundAddress));
-        uint256 shiftedAmount = shifter.shiftIn(_amount, _nHash, pHash, _sig);
+        uint256 shiftedAmount = shifter.shiftIn(_amount, _nHash, _sig, pHash);
         if (block.number > _deadline) {
             shifter.shiftOut(_refundAddress, shiftedAmount);
             return 0;
