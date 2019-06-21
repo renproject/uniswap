@@ -32,7 +32,7 @@ decimals: public(uint256)                         # 18
 totalSupply: public(uint256)                      # total number of UNI in existence
 balances: map(address, uint256)                   # UNI balance of an address
 allowances: map(address, map(address, uint256))   # UNI allowance of one address on another
-token: ERC20                                      # address of the ERC20 token traded on this contract
+token: public(ERC20)                              # address of the ERC20 token traded on this contract
 factory: Factory                                  # interface for the factory that created this contract
 
 # @dev This function acts as a contract constructor which is not currently supported in contracts deployed
@@ -66,18 +66,18 @@ def addLiquidity(min_liquidity: uint256, max_tokens: uint256, deadline: timestam
         assert max_tokens >= token_amount and liquidity_minted >= min_liquidity
         self.balances[msg.sender] += liquidity_minted
         self.totalSupply = total_liquidity + liquidity_minted
-        assert self.token.transferFrom(msg.sender, self, token_amount)
+        self.token.transferFrom(msg.sender, self, token_amount)
         log.AddLiquidity(msg.sender, msg.value, token_amount)
         log.Transfer(ZERO_ADDRESS, msg.sender, liquidity_minted)
         return liquidity_minted
     else:
-        assert (self.factory != ZERO_ADDRESS and self.token != ZERO_ADDRESS) and msg.value >= 1000000000
-        assert self.factory.getExchange(self.token) == self
+        # assert (self.factory != ZERO_ADDRESS and self.token != ZERO_ADDRESS) and msg.value >= 1000000000
+        # assert self.factory.getExchange(self.token) == self
         token_amount: uint256 = max_tokens
         initial_liquidity: uint256 = as_unitless_number(self.balance)
         self.totalSupply = initial_liquidity
         self.balances[msg.sender] = initial_liquidity
-        assert self.token.transferFrom(msg.sender, self, token_amount)
+        self.token.transferFrom(msg.sender, self, token_amount)
         log.AddLiquidity(msg.sender, msg.value, token_amount)
         log.Transfer(ZERO_ADDRESS, msg.sender, initial_liquidity)
         return initial_liquidity
