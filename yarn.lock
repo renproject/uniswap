@@ -1152,7 +1152,7 @@ d@1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-"darknode-sol@https://github.com/renproject/darknode-sol#shifter":
+"darknode-sol@git://github.com/renproject/darknode-sol#shifter":
   version "0.0.3"
   resolved "https://github.com/renproject/darknode-sol#576c8cbb46e9bc1e1aaa801afb498056d07204f7"
   dependencies:

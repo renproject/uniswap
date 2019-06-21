@@ -13,7 +13,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "darknode-sol": "https://github.com/renproject/darknode-sol#shifter",
+    "darknode-sol": "git://github.com/renproject/darknode-sol#shifter",
     "openzeppelin-solidity": "2.3.0"
   },
   "devDependencies": {

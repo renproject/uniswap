@@ -15,7 +15,6 @@ contract UniswapAdapterFactory {
     ShifterRegistry registry;
 
     mapping (address=>UniswapExchangeAdapter) exchangeAdapters;
-    mapping (address=>UniswapReserveAdapter) reserveAdapters;
 
     constructor(UniswapFactory _factory, ShifterRegistry _registry) public {
         factory = _factory;

@@ -31,18 +31,6 @@ module.exports = {
     useColors: true,
     bail: true,
   },
-  compilers: {
-    solc: {
-      version: "0.5.8",
-      settings: {
-        evmVersion: "petersburg",
-        optimizer: {
-          enabled: true,
-          runs: 200,
-        }
-      }
-    }
-  },
   plugins: [
     "truffle-plugin-verify"
   ],
