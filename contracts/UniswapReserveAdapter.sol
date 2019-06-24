@@ -75,15 +75,11 @@ contract UniswapReserveAdapter {
 
     /// @notice this function allows the liquidity provider to remove liquidity
     ///         from a uniswap reserve.
+    /// @param _uniAmount Amount of UNI the liquidity provider wants to burn.
     /// @param _minEth the minimum amount of ether the liquidity provider is 
     ///         willing to withdraw.
     /// @param _minTokens the minimum amount of this.token the liquidity 
     ///         provider is willing to withdraw.
-    /// @param _nHash this is used by the ren shifter contract to guarentee the 
-    ///         uniqueness of this request.
-    /// @param _sig is the signature returned by RenVM.
-    /// @param _minLiquidity Minimum number of UNI sender will mint if total UNI
-    ///         supply is greater than 0.
     /// @param _to is the specific blockchain address to receive the funds to.
     /// @param _deadline is the unix timestamp until which this transaction is 
     ///         valid till.
