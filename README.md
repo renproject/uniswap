@@ -1,6 +1,6 @@
 # `uniswap-adapter`
 
-[![Build Status](https://travis-ci.org/renproject/uniswap.svg?branch=master)](https://travis-ci.org/renproject/uniswap)
+[![Build Status](https://circleci.com/gh/renproject/uniswap.svg?style=svg)](https://circleci.com/gh/renproject/uniswap)
 [![Coverage Status](https://coveralls.io/repos/github/renproject/uniswap/badge.svg?branch=master)](https://coveralls.io/github/renproject/uniswap?branch=master)
 
 This repository contains renshift adapters for the uniswap contracts. These adapters would allow users to 
