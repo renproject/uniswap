@@ -51,7 +51,7 @@ contract UniswapExchangeAdapter {
         bytes calldata _to, uint256 _minAmt, address _token, uint256 _amount,
         uint256 _deadline
     ) external payable 
-        returns (uint256 tokensBought)
+        returns (uint256)
     {
         if (_token == ethereum) {
             return shifter.shiftOut(_to, exchange.ethToTokenSwapInput.value(msg.value)(_minAmt, _deadline));
@@ -85,7 +85,7 @@ contract UniswapExchangeAdapter {
     {
         require(_minEth > _relayFee);
 
-        bytes32 pHash = keccak256(abi.encode(_relayFee, _to, _minEth, _deadline, _refundAddress));
+        bytes32 pHash = keccak256(abi.encode(_relayFee, _to, _minEth, _refundAddress, _deadline));
         uint256 shiftedAmount = shifter.shiftIn(_amount, _nHash, _sig, pHash);
         if (now > _deadline) {
             shifter.shiftOut(_refundAddress, shiftedAmount);

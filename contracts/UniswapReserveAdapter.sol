@@ -24,6 +24,7 @@ contract UniswapReserveAdapter {
     constructor(IUniswapReserve _reserve, Shifter _shifter) public {
         reserve = _reserve;
         shifter = _shifter;
+        token = IERC20(shifter.token());
     }
 
     /// @notice this function only allows the reserve contract to send eth to 
@@ -54,7 +55,7 @@ contract UniswapReserveAdapter {
             payable 
             returns (uint256  uniMinted) 
         {
-        bytes32 pHash = keccak256(abi.encode(_minLiquidity, _deadline, _refundAddress));
+        bytes32 pHash = keccak256(abi.encode(_minLiquidity, _refundAddress, _deadline));
         uint256 amount = shifter.shiftIn(_amount, _nHash, _sig, pHash);
 
         if (now > _deadline) {
@@ -64,12 +65,12 @@ contract UniswapReserveAdapter {
 
         token.approve(address(reserve), _amount);
         uniMinted = reserve.addLiquidity.value(msg.value)(_minLiquidity, amount, _deadline);
-        reserve.transfer(msg.sender, uniMinted);
 
         uint256 balance = token.balanceOf(address(this));
         if ( balance > 0 ) {
             shifter.shiftOut(_refundAddress, balance);
         }
+        reserve.transfer(msg.sender, uniMinted);
         return uniMinted;
     }
 
