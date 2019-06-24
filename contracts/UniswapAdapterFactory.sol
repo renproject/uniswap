@@ -5,18 +5,19 @@ import "./UniswapReserveAdapter.sol";
 import "darknode-sol/contracts/Shifter/Shifter.sol";
 import "darknode-sol/contracts/Shifter/ShifterRegistry.sol";
 
-interface UniswapFactory {
+interface IUniswapFactory {
     function createExchange(address token) external returns (address);
     function getExchange(address token) external view returns (address);
 }
 
 contract UniswapAdapterFactory {
-    UniswapFactory factory;
+    IUniswapFactory factory;
     ShifterRegistry registry;
 
     mapping (address=>UniswapExchangeAdapter) exchangeAdapters;
+    mapping (address=>UniswapReserveAdapter) reserveAdapters;
 
-    constructor(UniswapFactory _factory, ShifterRegistry _registry) public {
+    constructor(IUniswapFactory _factory, ShifterRegistry _registry) public {
         factory = _factory;
         registry = _registry;
     }
