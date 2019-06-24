@@ -1,9 +1,10 @@
-# `solidity-typescript-boilerplate`
+# `uniswap-adapter`
 
-<!-- Replace ORG/REPO with organization and repository -->
+[![Build Status](https://travis-ci.org/renproject/uniswap.svg?branch=master)](https://travis-ci.org/renproject/uniswap)
+[![Coverage Status](https://coveralls.io/repos/github/renproject/uniswap/badge.svg?branch=master)](https://coveralls.io/github/renproject/uniswap?branch=master)
 
-[![Build Status](https://travis-ci.org/ORG/REPO.svg?branch=master)](https://travis-ci.org/ORG/REPO)
-[![Coverage Status](https://coveralls.io/repos/github/ORG/REPO/badge.svg?branch=master)](https://coveralls.io/github/ORG/REPO?branch=master)
+This repository conntains renshift adapters for the uniswap contracts. These adapters would allow users to 
+interact with uniswap contracts that use ShiftedERC20 tokens.
 
 ## Tests
 
