@@ -1,6 +1,8 @@
 pragma solidity ^0.5.8;
 
-interface IUniswapReserve {
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+
+contract IUniswapReserve is IERC20 {
     function addLiquidity(
         uint256 min_liquidity, 
         uint256 max_tokens,
