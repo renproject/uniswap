@@ -28,13 +28,17 @@ contract UniswapAdapterFactory {
     constructor(IUniswapFactory _factory, ShifterRegistry _registry) public {
         factory = _factory;
         registry = _registry;
+        address[] memory shiftedTokens = _registry.getShiftedTokens(address(0), 0);
+        for (uint64 i = 0; i < shiftedTokens.length; i++) {
+            createExchange(shiftedTokens[i]);
+        }
     }
     
     /// @notice Create a Uniswap exchange, and Uniswap adapters for the given
     ///         given token.
     /// @param _token the token for which the exchange and exchange adapters 
     ///         should be deployed for.
-    function createExchange(address _token) external 
+    function createExchange(address _token) public 
         returns 
             (
                 address exchange,
@@ -42,6 +46,7 @@ contract UniswapAdapterFactory {
                 UniswapReserveAdapter exchangeReserveAddress
             ) 
         {
+        require(exchangeAdapters[_token] == UniswapExchangeAdapter(0x0));
         exchange = factory.createExchange(_token);
         Shifter shifter = Shifter(registry.getShifterByToken(_token));
         exchangeAdapterAddress = new UniswapExchangeAdapter(IUniswapExchange(exchange), shifter);
