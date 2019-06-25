@@ -23,11 +23,14 @@ contract UniswapAdapterFactory {
     /// @notice A mapping of token addresses to reserve adapters.
     mapping (address=>UniswapReserveAdapter) private reserveAdapters;
 
-    /// @notice initializes the factory and shifter registry contracts, this 
-    ///         contract would be communicating with. 
+    /// @notice Initialize the factory and shifter registry contracts, this 
+    ///         contract would be communicating with and create exchannges 
+    ///         for all the registered shifted tokens. 
     constructor(IUniswapFactory _factory, ShifterRegistry _registry) public {
         factory = _factory;
         registry = _registry;
+
+        // create exchanges for all the registered shifted tokens.
         address[] memory shiftedTokens = _registry.getShiftedTokens(address(0), 0);
         for (uint64 i = 0; i < shiftedTokens.length; i++) {
             createExchange(shiftedTokens[i]);
@@ -36,7 +39,7 @@ contract UniswapAdapterFactory {
     
     /// @notice Create a Uniswap exchange, and Uniswap adapters for the given
     ///         given token.
-    /// @param _token the token for which the exchange and exchange adapters 
+    /// @param _token The token for which the exchange and exchange adapters 
     ///         should be deployed for.
     function createExchange(address _token) public 
         returns 
@@ -46,22 +49,33 @@ contract UniswapAdapterFactory {
                 UniswapReserveAdapter exchangeReserveAddress
             ) 
         {
-        require(exchangeAdapters[_token] == UniswapExchangeAdapter(0x0));
-        exchange = factory.createExchange(_token);
+        // Check whether an exchange already exists for the given token, if it 
+        // does not create one.
+        exchange = factory.getExchange(_token);
+        if (exchange == address(0x0)) {
+            exchange = factory.createExchange(_token);
+        }
+
+        // Check whether the exchange adapters already exist.
+        require(exchangeAdapters[_token] == UniswapExchangeAdapter(0x0), "exchange adapter already exist");
         Shifter shifter = Shifter(registry.getShifterByToken(_token));
+
+        // Deploy uniswap exchange adapter and store it.
         exchangeAdapterAddress = new UniswapExchangeAdapter(IUniswapExchange(exchange), shifter);
         exchangeAdapters[_token] = exchangeAdapterAddress;
+
+        // Deploy uniswap reserve adapter and store it.
         exchangeReserveAddress = new UniswapReserveAdapter(IUniswapReserve(exchange), shifter);
         reserveAdapters[_token] = exchangeReserveAddress;
     }
 
-    /// @notice get the exchange adapter for a given token.
+    /// @notice Get the exchange adapter for a given token.
     /// @param _token the token for which the exchange adapter is needed for.
     function getExchangeAdapter(address _token) external view returns (UniswapExchangeAdapter) {
         return exchangeAdapters[_token];
     }
 
-    /// @notice get the exchange adapter for a given token.
+    /// @notice Get the exchange adapter for a given token.
     /// @param _token the token for which the reserve adapter is needed for.
     function getReserveAdapter(address _token) external view returns (UniswapReserveAdapter) {
         return reserveAdapters[_token];
