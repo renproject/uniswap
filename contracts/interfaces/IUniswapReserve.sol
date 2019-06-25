@@ -2,6 +2,9 @@ pragma solidity ^0.5.8;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+/// @notice IUniswapExchange is a solidity translation of UniswapExchange.vy's 
+///         interface, original contract source code can be found at 
+///         https://github.com/uniswap.
 contract IUniswapReserve is IERC20 {
     function addLiquidity(
         uint256 min_liquidity, 

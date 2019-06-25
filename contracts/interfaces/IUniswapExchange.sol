@@ -1,5 +1,8 @@
 pragma solidity ^0.5.8;
 
+/// @notice IUniswapExchange is a solidity translation of UniswapExchange.vy's 
+///         interface, original contract source code can be found at 
+///         https://github.com/uniswap.
 interface IUniswapExchange {
     function ethToTokenSwapInput(
         uint256 min_tokens,
