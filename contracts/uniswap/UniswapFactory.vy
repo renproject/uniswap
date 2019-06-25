@@ -1,3 +1,7 @@
+# @title Uniswap Factory Interface V1
+# @notice Source code found at https://github.com/uniswap
+# @notice Use at your own risk
+
 contract Exchange():
     def setup(token_addr: address): modifying
 
