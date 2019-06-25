@@ -48,15 +48,15 @@ contract UniswapReserveAdapter {
     /// @param _deadline is the unix timestamp until which this transaction is 
     ///         valid till.
     function addLiquidity(
-        uint256 _amount, bytes32 _nHash, bytes calldata _sig,
-        uint256 _minLiquidity, bytes calldata _refundAddress, uint256 _deadline
+        uint256 _minLiquidity, bytes calldata _refundAddress, uint256 _deadline,
+        uint256 _amount, bytes32 _nHash, bytes calldata _sig
         ) 
             external 
             payable 
             returns (uint256  uniMinted) 
         {
         bytes32 pHash = keccak256(abi.encode(_minLiquidity, _refundAddress, _deadline));
-        uint256 amount = shifter.shiftIn(_amount, _nHash, _sig, pHash);
+        uint256 amount = shifter.shiftIn(pHash, _amount, _nHash, _sig);
 
         if (now > _deadline) {
             shifter.shiftOut(_refundAddress, amount);

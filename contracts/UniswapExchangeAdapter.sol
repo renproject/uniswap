@@ -54,46 +54,59 @@ contract UniswapExchangeAdapter {
         returns (uint256)
     {
         if (_token == ethereum) {
+            // Sell ethereum for this contract's primary token, and shift the 
+            // token out on to it's native blockchain.
             return shifter.shiftOut(_to, exchange.ethToTokenSwapInput.value(msg.value)(_minAmt, _deadline));
         }
+
+        // Sell _token for this contract's primary token, and shift the token
+        // out on to it's native blockchain.
         return shifter.shiftOut(_to, exchange.tokenToTokenSwapInput(_amount, _minAmt, 0, _deadline, _token));
     }
 
-    /// @notice this function allows the trader to sell this contract's primary 
-    ///         token for ether.
+    /// @notice Allow the trader to sell this contract's primary token for ether.
+    /// @param _relayFee An optional fee to incentivize a third party to submit 
+    ///         this transaction for the trader.
+    /// @param _to The address of the trader to which he/she wants to receive 
+    ///         their funds.
+    /// @param _minEth The minimum amount of ethereum the user is willing to 
+    ///         accept.
+    /// @param _refundAddress The specific blockchain address to refund the 
+    ///         funds to on the expiry of this trade.
+    /// @param _deadline The unix timestamp until which this transaction is 
+    ///         valid till.
     /// @param _amount the amount of the primary token the trader is willing to 
     ///         to spend.
     /// @param _nHash this is used by the ren shifter contract to guarentee the 
     ///         uniqueness of this request.
     /// @param _sig is the signature returned by RenVM.
-    /// @param _relayFee is an optional parameter that would incentivize a third 
-    ///         party to submit this transaction for the trader.
-    /// @param _to is the address of the trader to which he/she wants to receive 
-    ///         their funds.
-    /// @param _minEth is the minimum amount of ethereum the user is willing to 
-    ///         accept.
-    /// @param _refundAddress is the specific blockchain address to refund the 
-    ///         funds to on the expiry of this trade.
-    /// @param _deadline is the unix timestamp until which this transaction is 
-    ///         valid till.
     function sell(
-        uint256 _amount, bytes32 _nHash, bytes calldata _sig,
         uint256 _relayFee, address payable _to,
-        uint256 _minEth,  bytes calldata _refundAddress, uint256 _deadline
+        uint256 _minEth,  bytes calldata _refundAddress, uint256 _deadline,
+        uint256 _amount, bytes32 _nHash, bytes calldata _sig
     ) external 
         returns (uint256 ethBought)
     {
-        require(_minEth > _relayFee);
+        require(_minEth >= _relayFee);
 
+        // Calcualte the payload hash from the user input.
         bytes32 pHash = keccak256(abi.encode(_relayFee, _to, _minEth, _refundAddress, _deadline));
-        uint256 shiftedAmount = shifter.shiftIn(_amount, _nHash, _sig, pHash);
+        
+        uint256 shiftedAmount = shifter.shiftIn(pHash, _amount, _nHash, _sig);
+
+        // If this deadline passes ERC20Shifted tokens are shifted in and
+        // shifted out immediately.
         if (now > _deadline) {
             shifter.shiftOut(_refundAddress, shiftedAmount);
             return 0;
         }
         
+        // Approve and trade the shifted tokens with the uniswap exchange.
         require(token.approve(address(exchange), shiftedAmount));
         ethBought = exchange.tokenToEthSwapInput(shiftedAmount, _minEth, _deadline);
+        
+        // transfer the resultant funds to the trader, and pay the relay fees to
+        // the tx relayer.
         if (_relayFee > 0) {
             msg.sender.transfer(_relayFee);
         }
