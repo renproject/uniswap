@@ -11,7 +11,7 @@ import "darknode-sol/contracts/Shifter/Shifter.sol";
 contract UniswapExchangeAdapter {
 
     /// @notice This contract is associated with a single token, the primary 
-    ///         token of this conntract.
+    ///         token of this contract.
     IERC20 token;
 
     /// @notice The uniswap exchange this contract would be communicating with.
