@@ -4,26 +4,28 @@ import "./interfaces/IUniswapExchange.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "darknode-sol/contracts/Shifter/Shifter.sol";
 
-/// @notice funds should NEVER be transferred directly to this contract, as they 
+/// @notice Funds should NEVER be transferred directly to this contract, as they 
 ///         would be lost forever.
-/// @dev    this contract should not be deployed directly, allow the 
+/// @dev    Do not deploy this contract directly, allow the 
 ///         UniswapAdapterFactory to do the contract deployments.
 contract UniswapExchangeAdapter {
 
-    /// @notice this contract is associated with a single token.
+    /// @notice This contract is associated with a single token, the primary 
+    ///         token of this conntract.
     IERC20 token;
 
-    /// @notice the uniswap exchange this contract would be communicating with.
+    /// @notice The uniswap exchange this contract would be communicating with.
     IUniswapExchange public exchange;  
 
-    /// @notice the ren shifter this contract would be communicating with.
+    /// @notice The ren shifter this contract would be communicating with.
     Shifter public shifter;  
 
-    /// @notice we treat this as the ethereum token address, to have one 
+    /// @dev    We treat this as the ethereum token address, to have one 
     ///         function signnature for trading ethereum and erc20 tokens.
+    /// @notice Ethereum token address.
     address public ethereum = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
-    /// @notice initializes the exchange and shifter contracts, this contract 
+    /// @notice Initialize the exchange and shifter contracts, this contract 
     ///         would be communicating with. 
     constructor(IUniswapExchange _exchange, Shifter _shifter) public {
         exchange = _exchange;
@@ -32,14 +34,14 @@ contract UniswapExchangeAdapter {
     }
 
     /// @notice this function only allows the exchange contract to send eth to 
-    ///         this contract, this protects users from sending ether to this 
-    ///         contract by mistake.
+    ///         this contract, this protects users from accidenntally sending 
+    ///         ether to this contract.
     function () external payable {
         require(msg.sender == address(exchange), "only allow exchange to transfer eth into this contract");
     }
 
-    /// @notice this function allows the trader to buy this contract's primary 
-    ///         token with ether.
+    /// @notice Allow the trader to buy this contract's primary token with 
+    ///         ether or any other token supported by Uniswap.
     /// @param _to the specific blockchain address to send the funds to.
     /// @param _minAmt min amount of this contract's primary token the trader is 
     ///         willing to accept.
@@ -54,12 +56,12 @@ contract UniswapExchangeAdapter {
         returns (uint256)
     {
         if (_token == ethereum) {
-            // Sell ethereum for this contract's primary token, and shift the 
+            // Buy this contract's primary token with ether, and shift the 
             // token out on to it's native blockchain.
             return shifter.shiftOut(_to, exchange.ethToTokenSwapInput.value(msg.value)(_minAmt, _deadline));
         }
 
-        // Sell _token for this contract's primary token, and shift the token
+        // Buy this contract's primary token with _token, and shift the token
         // out on to it's native blockchain.
         return shifter.shiftOut(_to, exchange.tokenToTokenSwapInput(_amount, _minAmt, 0, _deadline, _token));
     }
@@ -75,11 +77,11 @@ contract UniswapExchangeAdapter {
     ///         funds to on the expiry of this trade.
     /// @param _deadline The unix timestamp until which this transaction is 
     ///         valid till.
-    /// @param _amount the amount of the primary token the trader is willing to 
+    /// @param _amount The amount of the primary token the trader is willing to 
     ///         to spend.
-    /// @param _nHash this is used by the ren shifter contract to guarentee the 
+    /// @param _nHash This is used by the ren shifter contract to guarentee the 
     ///         uniqueness of this request.
-    /// @param _sig is the signature returned by RenVM.
+    /// @param _sig The signature returned by RenVM.
     function sell(
         uint256 _relayFee, address payable _to,
         uint256 _minEth,  bytes calldata _refundAddress, uint256 _deadline,
