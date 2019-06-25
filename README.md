@@ -6,6 +6,10 @@
 This repository contains renshift adapters for the uniswap contracts. These adapters would allow users to 
 interact with uniswap contracts that use ShiftedERC20 tokens, without handling the tokens directly.
 
+## Architecture
+
+![alt text](https://raw.githubusercontent.com/renproject/uniswap/master/arch/arch.png)
+
 ## Tests
 
 Install the dependencies.
