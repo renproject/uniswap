@@ -45,7 +45,7 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
 
     const buildMint = async (user: string, pHash: string, shifter: ShifterInstance, value: BN) => {
         const nHash = `0x${randomBytes(32).toString("hex")}`;
-        const hash = await shifter.hashForSignature(user, value.toNumber(), nHash, pHash);
+        const hash = await shifter.hashForSignature(pHash, value.toNumber(), user, nHash);
         const sig = ecsign(Buffer.from(hash.slice(2), "hex"), privKey);
 
         pubToAddress(ecrecover(Buffer.from(hash.slice(2), "hex"), sig.v, sig.r, sig.s)).toString("hex")
@@ -68,7 +68,7 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const pHash = keccak256(payload);
 
         const [nHash, sigString] = await buildMint(uniswapReserveAdapter.address, pHash, btcShifter, amount);
-        await uniswapReserveAdapter.addLiquidity(amount.toString(), nHash, sigString, minLiquidity, refundAddress, deadline, { from: reserveOwner, value: amount });
+        await uniswapReserveAdapter.addLiquidity(minLiquidity, refundAddress, deadline, amount.toString(), nHash, sigString,  { from: reserveOwner, value: amount });
         (await zbtc.totalSupply()).should.bignumber.equal(amount);
     });
 
@@ -94,7 +94,7 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const pHash = keccak256(payload);
 
         const [nHash, sigString] = await buildMint(uniswapReserveAdapter.address, pHash, btcShifter, amount);
-        await uniswapReserveAdapter.addLiquidity(amount.toString(), nHash, sigString, minLiquidity, refundAddress, deadline, { from: reserveOwner, value: amount });
+        await uniswapReserveAdapter.addLiquidity(minLiquidity, refundAddress, deadline, amount.toString(), nHash, sigString, { from: reserveOwner, value: amount });
         (await zbtc.totalSupply()).should.bignumber.equal(amount);
     });
 
@@ -121,7 +121,7 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const [nHash, sigString] = await buildMint(uniswapExchangeAdapter.address, pHash, btcShifter, amount);
 
         const before = await web3.eth.getBalance(trader);
-        const tx = await uniswapExchangeAdapter.sell(amount.toString(), nHash, sigString, relayFee, trader, ethAmount, refundAddress, deadline, { from: trader, gasPrice: 10000000000 });
+        const tx = await uniswapExchangeAdapter.sell(relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString, { from: trader, gasPrice: 10000000000 });
         const after = await web3.eth.getBalance(trader);
         const received = after-before+tx.receipt.cumulativeGasUsed * 10000000000;
         (new BN(ethAmount).sub(new BN(received)).cmp(new BN(10000))).should.be.lte(0);
@@ -139,7 +139,7 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const [nHash, sigString] = await buildMint(uniswapExchangeAdapter.address, pHash, btcShifter, amount);
 
         const before = await web3.eth.getBalance(trader);
-        await uniswapExchangeAdapter.sell(amount.toString(), nHash, sigString, relayFee, trader, ethAmount, refundAddress, deadline, { from: relayer });
+        await uniswapExchangeAdapter.sell( relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString,{ from: relayer });
         const after = await web3.eth.getBalance(trader);
         (after - before - ethAmount).should.lte(0);
     })
@@ -156,7 +156,7 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const [nHash, sigString] = await buildMint(uniswapExchangeAdapter.address, pHash, btcShifter, amount);
 
         const before = await web3.eth.getBalance(trader);
-        await uniswapExchangeAdapter.sell(amount.toString(), nHash, sigString, relayFee, trader, ethAmount, refundAddress, deadline, { from: relayer, gasPrice: 10000000000 });
+        await uniswapExchangeAdapter.sell( relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString, { from: relayer, gasPrice: 10000000000 });
         const after = await web3.eth.getBalance(trader);
         (after - before - ethAmount + relayFee).should.lte(500);
     })
