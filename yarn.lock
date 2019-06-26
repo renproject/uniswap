@@ -1015,9 +1015,9 @@ d@1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-"darknode-sol@github:renproject/darknode-sol#f5cb1dd0ad4f23fee6a9335e79382fe737a9c59b":
+"darknode-sol@github:renproject/darknode-sol#0aa5ed777e151cbe6c16ac5d9c430027942e98dc":
   version "0.0.3"
-  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/f5cb1dd0ad4f23fee6a9335e79382fe737a9c59b"
+  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/0aa5ed777e151cbe6c16ac5d9c430027942e98dc"
   dependencies:
     openzeppelin-solidity "2.3.0"
 
@@ -4125,9 +4125,9 @@ sol-merger@^0.1.4:
     glob "^7.1.2"
 
 solc@^0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/solc/-/solc-0.5.9.tgz#ec513bbbbb8b46b4b4d1a6a2764c50f34877fffc"
-  integrity sha512-IyCEXnSbpb3ii8FkgNu0QDtCtnvyGCtYNQejOaIZi6/9/CLJ2ozDHN2oNG26HfGZ8op9yDgqC+5SHziFvkRZuA==
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/solc/-/solc-0.5.10.tgz#e57d789b1028f3d35f7989e5134d6ddc0e3b32aa"
+  integrity sha512-Stdrh/MDkopsXYPRzPehTNYuV80Grr2CnQMuFvWj+EeRVbe3piGHxW47KebWn1sGdmK8FLaMfUehccqJP0KovQ==
   dependencies:
     command-exists "^1.2.8"
     fs-extra "^0.30.0"
