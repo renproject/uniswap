@@ -1015,7 +1015,7 @@ d@1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-"darknode-sol@github:renproject/darknode-sol#0aa5ed777e151cbe6c16ac5d9c430027942e98dc":
+"darknode-sol@github:renproject/darknode-sol":
   version "0.0.3"
   resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/0aa5ed777e151cbe6c16ac5d9c430027942e98dc"
   dependencies:
