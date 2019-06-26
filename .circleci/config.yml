@@ -55,7 +55,11 @@ jobs:
       - install_deps
       - run:
           name: Run tests
-          command: npm run coverage
+          command: |
+            yarn run ganache-cli -d > /dev/null &
+            pid=$!
+            yarn run test
+            kill $pid
 
 workflows:
   build:
