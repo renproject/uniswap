@@ -1,0 +1,13 @@
+diff --git a/node_modules/darknode-sol/contracts/Shifter/Shifter.sol b/node_modules/darknode-sol/contracts/Shifter/Shifter.sol
+index 8511aa4..8df05e9 100644
+--- a/node_modules/darknode-sol/contracts/Shifter/Shifter.sol
++++ b/node_modules/darknode-sol/contracts/Shifter/Shifter.sol
+@@ -150,7 +150,7 @@ contract Shifter is Ownable {
+ 
+     /// @notice verifySignature checks the the provided signature matches the provided
+     /// parameters.
+-    function verifySignature(bytes32 _signedMessageHash, bytes memory _sig) public view returns (bool) {
++    function verifySignature(bytes32 _signedMessageHash, bytes memory _sig) public returns (bool) {
+         return mintAuthority == ECDSA.recover(_signedMessageHash, _sig);
+     }
+ 
