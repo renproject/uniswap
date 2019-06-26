@@ -45,25 +45,17 @@ contract UniswapExchangeAdapter {
     /// @param _to the specific blockchain address to send the funds to.
     /// @param _minAmt min amount of this contract's primary token the trader is 
     ///         willing to accept.
-    /// @param  _token is the token the trader wants to send.
-    /// @param  _amount is the amount of token the trader is willing to spend.
     /// @param _deadline is the unix timestamp until which this transaction is 
     ///         valid till.
-    function buy(
-        bytes calldata _to, uint256 _minAmt, address _token, uint256 _amount,
-        uint256 _deadline
-    ) external payable 
-        returns (uint256)
+    function buy(bytes calldata _to, uint256 _minAmt, uint256 _deadline) 
+        external payable returns (uint256)
     {
-        if (_token == ethereum) {
-            // Buy this contract's primary token with ether, and shift the 
-            // token out on to it's native blockchain.
-            return shifter.shiftOut(_to, exchange.ethToTokenSwapInput.value(msg.value)(_minAmt, _deadline));
-        }
-
-        // Buy this contract's primary token with _token, and shift the token
-        // out on to it's native blockchain.
-        return shifter.shiftOut(_to, exchange.tokenToTokenSwapInput(_amount, _minAmt, 0, _deadline, _token));
+        // Buy this contract's primary token with ether, and shift the 
+        // token out on to it's native blockchain.
+        return shifter.shiftOut(
+            _to, 
+            exchange.ethToTokenSwapInput.value(msg.value)(_minAmt, _deadline)
+        );
     }
 
     /// @notice Allow the trader to sell this contract's primary token for ether.
