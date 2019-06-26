@@ -56,10 +56,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            yarn run ganache-cli -d > /dev/null &
-            pid=$!
-            yarn run test
-            kill $pid
+            yarn run coverage
 
 workflows:
   build:
