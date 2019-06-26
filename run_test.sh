@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-yarn run ganache-cli -d > /dev/null &
+./node_modules/.bin/ganache-cli -d > /dev/null &
 pid=$!
 yarn run test
 kill $pid
