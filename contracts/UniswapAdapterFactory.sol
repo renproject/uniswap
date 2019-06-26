@@ -29,12 +29,6 @@ contract UniswapAdapterFactory {
     constructor(IUniswapFactory _factory, ShifterRegistry _registry) public {
         factory = _factory;
         registry = _registry;
-
-        // create exchanges for all the registered shifted tokens.
-        address[] memory shiftedTokens = _registry.getShiftedTokens(address(0), 0);
-        for (uint64 i = 0; i < shiftedTokens.length; i++) {
-            createExchange(shiftedTokens[i]);
-        }
     }
     
     /// @notice Create a Uniswap exchange, and Uniswap adapters for the given
