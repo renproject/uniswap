@@ -13,9 +13,9 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "darknode-sol": "https://github.com/renproject/darknode-sol",
+    "darknode-sol": "github:renproject/darknode-sol#f5cb1dd0ad4f23fee6a9335e79382fe737a9c59b",
     "openzeppelin-solidity": "2.3.0",
-    "uniswap-vy": "https://github.com/Uniswap/contracts-vyper#v2"
+    "uniswap-vy": "github:Uniswap/contracts-vyper#v2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -27,7 +27,7 @@
     "bn.js": "^4.11.8",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "chai-bignumber": "git://github.com/noiach/chai-bignumber.git#master",
+    "chai-bignumber": "github:noiach/chai-bignumber.git#master",
     "coveralls": "^3.0.4",
     "dotenv": "^8.0.0",
     "eth-gas-reporter": "^0.2.1",

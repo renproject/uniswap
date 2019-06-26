@@ -647,9 +647,9 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-"chai-bignumber@git://github.com/noiach/chai-bignumber.git#master":
+"chai-bignumber@github:noiach/chai-bignumber.git#master":
   version "2.0.2"
-  resolved "git://github.com/noiach/chai-bignumber.git#fd75e47b2980c3a151d2a05b070293b18a9bddce"
+  resolved "https://codeload.github.com/noiach/chai-bignumber/tar.gz/fd75e47b2980c3a151d2a05b070293b18a9bddce"
 
 chai@^4.2.0:
   version "4.2.0"
@@ -1015,9 +1015,9 @@ d@1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-"darknode-sol@https://github.com/renproject/darknode-sol":
+"darknode-sol@github:renproject/darknode-sol#f5cb1dd0ad4f23fee6a9335e79382fe737a9c59b":
   version "0.0.3"
-  resolved "https://github.com/renproject/darknode-sol#f5cb1dd0ad4f23fee6a9335e79382fe737a9c59b"
+  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/f5cb1dd0ad4f23fee6a9335e79382fe737a9c59b"
   dependencies:
     openzeppelin-solidity "2.3.0"
 
@@ -4804,9 +4804,9 @@ unique-string@^1.0.0:
   dependencies:
     crypto-random-string "^1.0.0"
 
-"uniswap-vy@https://github.com/Uniswap/contracts-vyper#v2":
+"uniswap-vy@github:Uniswap/contracts-vyper#v2":
   version "0.0.0"
-  resolved "https://github.com/Uniswap/contracts-vyper#60c4a20bf00ac190668f19491d4c38f6744c022c"
+  resolved "https://codeload.github.com/Uniswap/contracts-vyper/tar.gz/60c4a20bf00ac190668f19491d4c38f6744c022c"
 
 universalify@^0.1.0:
   version "0.1.2"
