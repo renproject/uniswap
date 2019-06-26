@@ -2,7 +2,8 @@
 
 ./node_modules/.bin/ganache-cli -d > /dev/null &
 pid=$!
-yarn run test
+eval "yarn run test"
+test_result=$?
 kill $pid
-exit 0
+exit "$test_result"
 
