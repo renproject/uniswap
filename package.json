@@ -34,7 +34,7 @@
     "ganache-cli": "^6.4.4",
     "patch-package": "^6.1.2",
     "solc": "^0.5.9",
-    "solidity-coverage": "github:rotcivegaf/solidity-coverage#5875f5b7bc74d447f3312c9c0e9fc7814b482477",
+    "solidity-coverage": "github:rotcivegaf/solidity-coverage",
     "truffle": "^5.0.15",
     "truffle-hdwallet-provider": "^1.0.10",
     "truffle-plugin-verify": "^0.2.2",

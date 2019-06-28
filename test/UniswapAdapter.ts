@@ -41,11 +41,11 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         privKey = Buffer.from(mintAuthority.privateKey.slice(2), "hex");
 
         // Deploy btc and zec shifters.
-        btcShifter = await Shifter.new(NULL, zbtc.address, feeRecipient, mintAuthority.address, 0);
+        btcShifter = await Shifter.new(zbtc.address, feeRecipient, mintAuthority.address, 0);
         await zbtc.transferOwnership(btcShifter.address);
         await btcShifter.claimTokenOwnership();
 
-        zecShifter = await Shifter.new(NULL, zzec.address, feeRecipient, mintAuthority.address, 0);
+        zecShifter = await Shifter.new(zzec.address, feeRecipient, mintAuthority.address, 0);
         await zzec.transferOwnership(zecShifter.address);
         await zecShifter.claimTokenOwnership();
 
