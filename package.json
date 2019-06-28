@@ -13,7 +13,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "darknode-sol": "github:renproject/darknode-sol#registry-pattern",
+    "darknode-sol": "github:renproject/darknode-sol",
     "openzeppelin-solidity": "2.3.0",
     "uniswap-vy": "github:Uniswap/contracts-vyper#v2"
   },

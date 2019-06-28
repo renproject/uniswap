@@ -1015,9 +1015,9 @@ d@1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-"darknode-sol@github:renproject/darknode-sol#registry-pattern":
+"darknode-sol@github:renproject/darknode-sol":
   version "0.0.3"
-  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/8da4bd7f0f31825071023449d85c04fb3525e984"
+  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/4c0f2a2cdc6c012b67c68ec51d9af19e2b60d974"
   dependencies:
     openzeppelin-solidity "2.3.0"
 
