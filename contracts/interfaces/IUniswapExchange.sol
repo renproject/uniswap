@@ -50,4 +50,6 @@ interface IUniswapExchange {
         external
         view
         returns (uint256 eth_bought);
+
+    function tokenAddress() external view returns (address);
 }
