@@ -1015,9 +1015,9 @@ d@1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-"darknode-sol@github:renproject/darknode-sol":
+"darknode-sol@github:renproject/darknode-sol#registry-pattern":
   version "0.0.3"
-  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/0aa5ed777e151cbe6c16ac5d9c430027942e98dc"
+  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/8da4bd7f0f31825071023449d85c04fb3525e984"
   dependencies:
     openzeppelin-solidity "2.3.0"
 
@@ -1272,9 +1272,9 @@ elliptic@6.3.3:
     inherits "^2.0.1"
 
 elliptic@^6.0.0, elliptic@^6.4.0, elliptic@^6.4.1:
-  version "6.4.1"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.1.tgz#c2d0b7776911b86722c632c3c06c60f2f819939a"
-  integrity sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.0.tgz#2b8ed4c891b7de3200e14412a5b8248c7af505ca"
+  integrity sha512-eFOJTMyCYb7xtE/caJ6JJu+bhi67WCYNbkGSknu20pmM8Ke/bqOfdnZWxyoGN26JgfxTbXrsCkEw4KheCT/KGg==
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -4138,7 +4138,7 @@ solc@^0.5.9:
     tmp "0.0.33"
     yargs "^11.0.0"
 
-"solidity-coverage@github:rotcivegaf/solidity-coverage#5875f5b7bc74d447f3312c9c0e9fc7814b482477":
+"solidity-coverage@github:rotcivegaf/solidity-coverage":
   version "0.5.11"
   resolved "https://codeload.github.com/rotcivegaf/solidity-coverage/tar.gz/5875f5b7bc74d447f3312c9c0e9fc7814b482477"
   dependencies:
