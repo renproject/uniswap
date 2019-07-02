@@ -4,6 +4,10 @@
 
 version: 2.1
 
+
+orbs:
+    core: ren/core@0.0.1
+
 executors:
   default:
     docker:
@@ -11,24 +15,6 @@ executors:
     working_directory: ~/contracts
 
 commands:
-  install_vyper:
-    description: "Install Vyper"
-    steps:
-      - run:
-          name: Install Vyper
-          command: |
-            sudo apt-get update
-            sudo apt-get -y upgrade
-            sudo apt-get install build-essential libssl-dev libffi-dev
-            wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz
-            tar xfz Python-3.6.2.tgz
-            cd Python-3.6.2/
-            ./configure --prefix /usr/local/lib/python3.6
-            sudo make
-            sudo make install
-            echo 'export PATH="$HOME/.local/bin:/usr/local/lib/python3.6/bin:$PATH"' >> $BASH_ENV
-            source $BASH_ENV
-            pip3.6 install --user vyper
   install_deps:
     description: "Install dependencies"
     steps:
@@ -51,7 +37,7 @@ jobs:
     executor: default
     steps:
       - checkout
-      - install_vyper
+      - core/install_vyper
       - install_deps
       - run:
           name: Run tests
