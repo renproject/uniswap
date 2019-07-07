@@ -2,7 +2,7 @@ pragma solidity ^0.5.8;
 
 import "./interfaces/IUniswapExchange.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "darknode-sol/contracts/Shifter/Shifter.sol";
+import "darknode-sol/contracts/Shifter/ShifterRegistry.sol";
 
 /// @notice Funds should NEVER be transferred directly to this contract, as they 
 ///         would be lost forever.
@@ -12,13 +12,13 @@ contract UniswapExchangeAdapter {
 
     /// @notice This contract is associated with a single token, the primary 
     ///         token of this contract.
-    IERC20 token;
+    address token;
 
     /// @notice The uniswap exchange this contract would be communicating with.
     IUniswapExchange public exchange;  
 
-    /// @notice The ren shifter this contract would be communicating with.
-    Shifter public shifter;  
+    /// @notice The ren shifter registry this contract would be communicating with.
+    ShifterRegistry public registry;  
 
     /// @dev    We treat this as the ethereum token address, to have one 
     ///         function signnature for trading ethereum and erc20 tokens.
@@ -27,10 +27,10 @@ contract UniswapExchangeAdapter {
 
     /// @notice Initialize the exchange and shifter contracts, this contract 
     ///         would be communicating with. 
-    constructor(IUniswapExchange _exchange, Shifter _shifter) public {
+    constructor(IUniswapExchange _exchange, ShifterRegistry _registry) public {
         exchange = _exchange;
-        shifter = _shifter;
-        token = IERC20(shifter.token());
+        registry = _registry;
+        token = exchange.tokenAddress();
     }
 
     /// @notice this function only allows the exchange contract to send eth to 
@@ -52,7 +52,7 @@ contract UniswapExchangeAdapter {
     {
         // Buy this contract's primary token with ether, and shift the 
         // token out on to it's native blockchain.
-        return shifter.shiftOut(
+        return registry.getShifterByToken(token).shiftOut(
             _to, 
             exchange.ethToTokenSwapInput.value(msg.value)(_minAmt, _deadline)
         );
@@ -85,18 +85,17 @@ contract UniswapExchangeAdapter {
 
         // Calcualte the payload hash from the user input.
         bytes32 pHash = keccak256(abi.encode(_relayFee, _to, _minEth, _refundAddress, _deadline));
-        
-        uint256 shiftedAmount = shifter.shiftIn(pHash, _amount, _nHash, _sig);
+        uint256 shiftedAmount = registry.getShifterByToken(token).shiftIn(pHash, _amount, _nHash, _sig);
 
         // If this deadline passes ERC20Shifted tokens are shifted in and
         // shifted out immediately.
         if (now > _deadline) {
-            shifter.shiftOut(_refundAddress, shiftedAmount);
+            registry.getShifterByToken(token).shiftOut(_refundAddress, shiftedAmount);
             return 0;
         }
         
         // Approve and trade the shifted tokens with the uniswap exchange.
-        require(token.approve(address(exchange), shiftedAmount));
+        require(IERC20(token).approve(address(exchange), shiftedAmount));
         ethBought = exchange.tokenToEthSwapInput(shiftedAmount, _minEth, _deadline);
         
         // transfer the resultant funds to the trader, and pay the relay fees to

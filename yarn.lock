@@ -1017,7 +1017,7 @@ d@1:
 
 "darknode-sol@github:renproject/darknode-sol":
   version "0.0.3"
-  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/bb2a700a100a0b039d66f6eb71ddda4a44d25bf9"
+  resolved "https://codeload.github.com/renproject/darknode-sol/tar.gz/4c0f2a2cdc6c012b67c68ec51d9af19e2b60d974"
   dependencies:
     openzeppelin-solidity "2.3.0"
 
@@ -4138,7 +4138,7 @@ solc@0.5.9:
     tmp "0.0.33"
     yargs "^11.0.0"
 
-"solidity-coverage@github:rotcivegaf/solidity-coverage#5875f5b7bc74d447f3312c9c0e9fc7814b482477":
+"solidity-coverage@github:rotcivegaf/solidity-coverage":
   version "0.5.11"
   resolved "https://codeload.github.com/rotcivegaf/solidity-coverage/tar.gz/5875f5b7bc74d447f3312c9c0e9fc7814b482477"
   dependencies:

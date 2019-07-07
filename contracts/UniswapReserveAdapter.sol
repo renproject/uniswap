@@ -1,7 +1,7 @@
 pragma solidity ^0.5.8;
 
 import "./interfaces/IUniswapReserve.sol";
-import "darknode-sol/contracts/Shifter/Shifter.sol";
+import "darknode-sol/contracts/Shifter/ShifterRegistry.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 /// @notice funds should NEVER be transferred directly to this contract, as they 
@@ -12,20 +12,20 @@ contract UniswapReserveAdapter {
 
     /// @notice This contract is associated with a single token, the primary 
     ///         token of this contract.
-    IERC20 token;
+    address token;
 
     /// @notice The uniswap reserve this contract would be communicating with.
     IUniswapReserve public reserve;  
 
-    /// @notice The ren shifter this contract would be communicating with.
-    Shifter public shifter;  
+    /// @notice The ren shifter registry this contract would be communicating with.
+    ShifterRegistry public registry;  
 
-    /// @notice Initialize the reserve and shifter contracts, this contract 
+    /// @notice Initialize the reserve and shifter registry contracts, this contract 
     ///         would be communicating with. 
-    constructor(IUniswapReserve _reserve, Shifter _shifter) public {
+    constructor(IUniswapReserve _reserve, ShifterRegistry _registry) public {
         reserve = _reserve;
-        shifter = _shifter;
-        token = IERC20(shifter.token());
+        registry = _registry;
+        token = reserve.tokenAddress();
     }
 
     /// @notice Allow only the reserve contract to send eth to this contract, 
@@ -58,24 +58,24 @@ contract UniswapReserveAdapter {
         {
         // Calculate payload hash and shift in the required tokens.
         bytes32 pHash = keccak256(abi.encode(_minLiquidity, _refundAddress, _deadline));
-        uint256 amount = shifter.shiftIn(pHash, _amount, _nHash, _sig);
+        uint256 amount = registry.getShifterByToken(token).shiftIn(pHash, _amount, _nHash, _sig);
 
         // If this deadline passes ERC20Shifted tokens are shifted in and
         // shifted out immediately.
         if (now > _deadline) {
-            shifter.shiftOut(_refundAddress, amount);
+            registry.getShifterByToken(token).shiftOut(_refundAddress, amount);
             return 0;
         }
 
         // Add liquidity to the uniswap reserve.
-        token.approve(address(reserve), _amount);
+        IERC20(token).approve(address(reserve), _amount);
         uniMinted = reserve.addLiquidity.value(msg.value)(_minLiquidity, amount, _deadline);
 
         // Shift out any remaining tokens to the refund address on the native 
         // blockchain.
-        uint256 balance = token.balanceOf(address(this));
+        uint256 balance = IERC20(token).balanceOf(address(this));
         if ( balance > 0 ) {
-            shifter.shiftOut(_refundAddress, balance);
+            registry.getShifterByToken(token).shiftOut(_refundAddress, balance);
         }
 
         // Transfer minted uni to msg.sender, these would be required to 
@@ -108,7 +108,7 @@ contract UniswapReserveAdapter {
         (eth, tokens) = reserve.removeLiquidity(_uniAmount, _minEth, _minTokens, _deadline);
 
         // Transfer the funds to the user.
-        tokens = shifter.shiftOut(_to, tokens);
+        tokens = registry.getShifterByToken(token).shiftOut(_to, tokens);
         msg.sender.transfer(eth);
     }
 }

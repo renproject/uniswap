@@ -3,7 +3,6 @@ pragma solidity ^0.5.8;
 import "./interfaces/IUniswapFactory.sol";
 import "./UniswapExchangeAdapter.sol";
 import "./UniswapReserveAdapter.sol";
-import "darknode-sol/contracts/Shifter/Shifter.sol";
 import "darknode-sol/contracts/Shifter/ShifterRegistry.sol";
 
 /// @dev    Use this contract to deploy exchange, reserve adapters and the 
@@ -52,14 +51,13 @@ contract UniswapAdapterFactory {
 
         // Check whether the exchange adapters already exist.
         require(exchangeAdapters[_token] == UniswapExchangeAdapter(0x0), "exchange adapter already exist");
-        Shifter shifter = Shifter(registry.getShifterByToken(_token));
 
         // Deploy uniswap exchange adapter and store it.
-        exchangeAdapterAddress = new UniswapExchangeAdapter(IUniswapExchange(exchange), shifter);
+        exchangeAdapterAddress = new UniswapExchangeAdapter(IUniswapExchange(exchange), registry);
         exchangeAdapters[_token] = exchangeAdapterAddress;
 
         // Deploy uniswap reserve adapter and store it.
-        exchangeReserveAddress = new UniswapReserveAdapter(IUniswapReserve(exchange), shifter);
+        exchangeReserveAddress = new UniswapReserveAdapter(IUniswapReserve(exchange), registry);
         reserveAdapters[_token] = exchangeReserveAddress;
     }
 
