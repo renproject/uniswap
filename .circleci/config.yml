@@ -4,14 +4,10 @@
 
 version: 2.1
 
-
-orbs:
-    core: ren/core@0.0.1
-
 executors:
   default:
     docker:
-      - image: circleci/node:10.16
+      - image: nikolaik/python-nodejs:python3.6-nodejs10
     working_directory: ~/contracts
 
 commands:
@@ -37,7 +33,10 @@ jobs:
     executor: default
     steps:
       - checkout
-      - core/install_vyper
+      - run:
+          name: Install Vyper
+          command: |
+            pip install --user vyper
       - install_deps
       - run:
           name: Run tests
