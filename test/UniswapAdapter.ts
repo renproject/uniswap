@@ -4,11 +4,11 @@ import { ecrecover, ecsign, pubToAddress } from "ethereumjs-util";
 import { keccak256 } from "web3-utils";
 
 import {
-    ShifterInstance, UniswapExchangeAdapterInstance, UniswapExchangeInstance,
-    UniswapReserveAdapterInstance, ERC20ShiftedInstance, UniswapFactoryInstance,
-    UniswapAdapterFactoryInstance, ShifterRegistryInstance
+    ERC20ShiftedInstance, ShifterInstance, ShifterRegistryInstance, UniswapAdapterFactoryInstance,
+    UniswapExchangeAdapterInstance, UniswapExchangeInstance, UniswapFactoryInstance,
+    UniswapReserveAdapterInstance,
 } from "../types/truffle-contracts";
-import { NULL, ETHEREUM_TOKEN_ADDRESS } from './helper/testUtils';
+import { ETHEREUM_TOKEN_ADDRESS, getFee, NULL } from "./helper/testUtils";
 
 const Shifter = artifacts.require("Shifter");
 const ShifterRegistry = artifacts.require("ShifterRegistry");
@@ -58,27 +58,27 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         exchangeTemplate = await UniswapExchange.new();
         uniswapFactory = await UniswapFactory.new();
         await uniswapFactory.initializeFactory(exchangeTemplate.address);
-       
-       // <-- The above setup already exists on kovan and mainnet -->
-       uniswapAdapterFactory = await UniswapAdapterFactory.new(uniswapFactory.address, shifterRegistry.address);
-       await uniswapAdapterFactory.createExchange(zbtc.address);
-       await uniswapAdapterFactory.createExchange(zzec.address);
 
-       const btcUniswapReserveAdapterAddress = await uniswapAdapterFactory.getReserveAdapter(zbtc.address);
-       const btcUniswapExchangeAdapterAddress = await uniswapAdapterFactory.getExchangeAdapter(zbtc.address);
-       const btcExchangeAddress = await uniswapFactory.getExchange(zbtc.address);
+        // <-- The above setup already exists on kovan and mainnet -->
+        uniswapAdapterFactory = await UniswapAdapterFactory.new(uniswapFactory.address, shifterRegistry.address);
+        await uniswapAdapterFactory.createExchange(zbtc.address);
+        await uniswapAdapterFactory.createExchange(zzec.address);
 
-       const zecUniswapReserveAdapterAddress = await uniswapAdapterFactory.getReserveAdapter(zzec.address);
-       const zecUniswapExchangeAdapterAddress = await uniswapAdapterFactory.getExchangeAdapter(zzec.address);
-       const zecExchangeAddress = await uniswapFactory.getExchange(zzec.address);
+        const btcUniswapReserveAdapterAddress = await uniswapAdapterFactory.getReserveAdapter(zbtc.address);
+        const btcUniswapExchangeAdapterAddress = await uniswapAdapterFactory.getExchangeAdapter(zbtc.address);
+        const btcExchangeAddress = await uniswapFactory.getExchange(zbtc.address);
 
-       btcUniswapReserveAdapter = await UniswapReserveAdapter.at(btcUniswapReserveAdapterAddress);
-       btcUniswapExchangeAdapter = await UniswapExchangeAdapter.at(btcUniswapExchangeAdapterAddress);
-       btcExchange = await UniswapExchange.at(btcExchangeAddress);
+        const zecUniswapReserveAdapterAddress = await uniswapAdapterFactory.getReserveAdapter(zzec.address);
+        const zecUniswapExchangeAdapterAddress = await uniswapAdapterFactory.getExchangeAdapter(zzec.address);
+        const zecExchangeAddress = await uniswapFactory.getExchange(zzec.address);
 
-       zecUniswapReserveAdapter = await UniswapReserveAdapter.at(zecUniswapReserveAdapterAddress);
-       zecUniswapExchangeAdapter = await UniswapExchangeAdapter.at(zecUniswapExchangeAdapterAddress);
-       zecExchange = await UniswapExchange.at(zecExchangeAddress);
+        btcUniswapReserveAdapter = await UniswapReserveAdapter.at(btcUniswapReserveAdapterAddress);
+        btcUniswapExchangeAdapter = await UniswapExchangeAdapter.at(btcUniswapExchangeAdapterAddress);
+        btcExchange = await UniswapExchange.at(btcExchangeAddress);
+
+        zecUniswapReserveAdapter = await UniswapReserveAdapter.at(zecUniswapReserveAdapterAddress);
+        zecUniswapExchangeAdapter = await UniswapExchangeAdapter.at(zecUniswapExchangeAdapterAddress);
+        zecExchange = await UniswapExchange.at(zecExchangeAddress);
     });
 
     const buildMint = async (user: string, pHash: string, shifter: ShifterInstance, value: BN) => {
@@ -106,7 +106,7 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const pHash = keccak256(payload);
 
         const [nHash, sigString] = await buildMint(btcUniswapReserveAdapter.address, pHash, btcShifter, amount);
-        await btcUniswapReserveAdapter.addLiquidity(minLiquidity, refundAddress, deadline, amount.toString(), nHash, sigString,  { from: reserveOwner, value: amount });
+        await btcUniswapReserveAdapter.addLiquidity(minLiquidity, refundAddress, deadline, amount.toString(), nHash, sigString, { from: reserveOwner, value: amount });
         (await zbtc.totalSupply()).should.bignumber.equal(amount);
     });
 
@@ -114,13 +114,12 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const deadline = 100000000000;
         const amount = new BN(200000000000000);
         const uniAmount = await btcExchange.balanceOf(reserveOwner);
-        await btcExchange.approve(btcUniswapReserveAdapter.address, uniAmount, {from: reserveOwner});
-        const before = await web3.eth.getBalance(reserveOwner);
-        const tx = await btcUniswapReserveAdapter.removeLiquidity(uniAmount, amount, amount, "0x11", deadline, { from: reserveOwner, gasPrice: 10000000000 });
-        const after = await web3.eth.getBalance(reserveOwner);
+        await btcExchange.approve(btcUniswapReserveAdapter.address, uniAmount, { from: reserveOwner });
+        const before = new BN((await web3.eth.getBalance(reserveOwner)).toString());
+        const txFee = await getFee(btcUniswapReserveAdapter.removeLiquidity(uniAmount, amount, amount, "0x11", deadline, { from: reserveOwner }));
+        const after = new BN((await web3.eth.getBalance(reserveOwner)).toString());
         (await zbtc.totalSupply()).should.bignumber.equal(0);
-        const transferred = after-before+tx.receipt.cumulativeGasUsed * 10000000000;
-        (amount.sub(new BN(transferred)).cmp(new BN(10000))).should.be.lte(0);
+        after.sub(before).add(txFee).should.bignumber.equal(amount);
     });
 
     it("Can add liquidity after removing liquidity", async () => {
@@ -158,57 +157,62 @@ contract("UniswapAdapter", ([trader, reserveOwner, relayer, feeRecipient]) => {
         const pHash = keccak256(payload);
         const [nHash, sigString] = await buildMint(btcUniswapExchangeAdapter.address, pHash, btcShifter, amount);
 
-        const before = await web3.eth.getBalance(trader);
-        const tx = await btcUniswapExchangeAdapter.sell(relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString, { from: trader, gasPrice: 10000000000 });
-        const after = await web3.eth.getBalance(trader);
-        const received = after-before+tx.receipt.cumulativeGasUsed * 10000000000;
-        (new BN(ethAmount).sub(new BN(received)).cmp(new BN(10000))).should.be.lte(0);
+        const before = new BN((await web3.eth.getBalance(trader)).toString());
+        const txFee = await getFee(btcUniswapExchangeAdapter.sell(relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString, { from: trader }));
+        const after = new BN((await web3.eth.getBalance(trader)).toString());
+
+        const makerFee = amount.mul(new BN(30)).div(new BN(10000));
+        after.sub(before).add(txFee).should.bignumber.equal(amount.sub(makerFee));
     })
 
     it("Can sell btc for eth with a relayer without a fee", async () => {
         const amount = new BN(50000);
-        const relayFee = 0;
+        const relayFee = new BN(0);
         const deadline = 100000000000;
         const refundAddress = "0x";
 
-        const ethAmount = new BN(await btcExchange.getTokenToEthInputPrice(amount.toString())).toNumber();
-        const payload = web3.eth.abi.encodeParameters(['uint256', 'address', 'uint256', 'bytes', 'uint256'], [relayFee, trader, ethAmount, refundAddress, deadline]);
+        const ethAmount = new BN(await btcExchange.getTokenToEthInputPrice(amount.toString()));
+        const payload = web3.eth.abi.encodeParameters(['uint256', 'address', 'uint256', 'bytes', 'uint256'], [relayFee.toNumber(), trader, ethAmount.toNumber(), refundAddress, deadline]);
         const pHash = keccak256(payload);
         const [nHash, sigString] = await buildMint(btcUniswapExchangeAdapter.address, pHash, btcShifter, amount);
 
-        const before = await web3.eth.getBalance(trader);
-        await btcUniswapExchangeAdapter.sell( relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString,{ from: relayer });
-        const after = await web3.eth.getBalance(trader);
-        (after - before - ethAmount).should.lte(0);
+        const before = new BN((await web3.eth.getBalance(trader)).toString());
+        await btcUniswapExchangeAdapter.sell(relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString, { from: relayer });
+        const after = new BN((await web3.eth.getBalance(trader)).toString());
+
+        after.sub(before).should.be.bignumber.equal(ethAmount);
     })
 
     it("Can sell btc for eth with a relayer with a fee", async () => {
         const amount = new BN(50000);
-        const relayFee = 1000;
+        const relayFee = new BN(1000);
         const deadline = 100000000000;
         const refundAddress = "0x";
 
-        const ethAmount = new BN(await btcExchange.getTokenToEthInputPrice(amount.toString())).toNumber();
-        const payload = web3.eth.abi.encodeParameters(['uint256', 'address', 'uint256', 'bytes', 'uint256'], [relayFee, trader, ethAmount, refundAddress, deadline]);
+        const ethAmount = new BN(await btcExchange.getTokenToEthInputPrice(amount.toString()));
+        const payload = web3.eth.abi.encodeParameters(['uint256', 'address', 'uint256', 'bytes', 'uint256'], [relayFee.toNumber(), trader, ethAmount.toNumber(), refundAddress, deadline]);
         const pHash = keccak256(payload);
         const [nHash, sigString] = await buildMint(btcUniswapExchangeAdapter.address, pHash, btcShifter, amount);
 
-        const before = await web3.eth.getBalance(trader);
-        await btcUniswapExchangeAdapter.sell( relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString, { from: relayer, gasPrice: 10000000000 });
-        const after = await web3.eth.getBalance(trader);
-        (after - before - ethAmount + relayFee).should.lte(500);
+        const before = new BN((await web3.eth.getBalance(trader)).toString());
+        await btcUniswapExchangeAdapter.sell(relayFee, trader, ethAmount, refundAddress, deadline, amount.toString(), nHash, sigString, { from: relayer });
+        const after = new BN((await web3.eth.getBalance(trader)).toString());
+
+        after.sub(before).should.be.bignumber.equal(ethAmount.sub(relayFee));
     })
 
     it("Can remove liquidity after trading", async () => {
         const deadline = 100000000000;
-        const amount = new BN(200000000000000);
-        const withdrawAmount = new BN(100000000000000);
         const uniAmount = await btcExchange.balanceOf(reserveOwner);
-        await btcExchange.approve(btcUniswapReserveAdapter.address, uniAmount, {from: reserveOwner});
-        const before = await web3.eth.getBalance(reserveOwner);
-        const tx = await btcUniswapReserveAdapter.removeLiquidity(uniAmount, withdrawAmount, withdrawAmount, "0x11", deadline, { from: reserveOwner, gasPrice: 10000000000 });
-        const after = await web3.eth.getBalance(reserveOwner);
+        const totalLiquidity = await btcExchange.totalSupply();
+        const ethLiquidity = new BN((await web3.eth.getBalance(btcExchange.address)).toString());
+        const expectedReturnedAmount = uniAmount.mul(ethLiquidity).div(totalLiquidity)
+        await btcExchange.approve(btcUniswapReserveAdapter.address, uniAmount, { from: reserveOwner });
+        const before = new BN((await web3.eth.getBalance(reserveOwner)).toString());
+        const txFee = await getFee(btcUniswapReserveAdapter.removeLiquidity(uniAmount, expectedReturnedAmount, new BN(1), "0x11", deadline, { from: reserveOwner }));
+        const after = new BN((await web3.eth.getBalance(reserveOwner)).toString());
         (await zbtc.totalSupply()).should.bignumber.equal(0);
-        const transferred = after-before+tx.receipt.cumulativeGasUsed * 10000000000;
+
+        after.sub(before).add(txFee).should.bignumber.equal(expectedReturnedAmount);
     });
 });

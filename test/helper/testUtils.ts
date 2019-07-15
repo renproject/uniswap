@@ -1,11 +1,11 @@
 
 import * as chai from "chai";
-import chaiAsPromised from "chai-as-promised";
-import chaiBigNumber from "chai-bignumber";
 import * as crypto from "crypto";
 
+import chaiAsPromised from "chai-as-promised";
+import chaiBigNumber from "chai-bignumber";
+import { Log, TransactionReceipt } from "web3-core";
 import BigNumber from "bignumber.js";
-
 import BN from "bn.js";
 
 // Import chai log helper
@@ -64,3 +64,10 @@ export const increaseTime = async (seconds: number) => {
         // console.log(`Increased by ${increase} to is ${currentTimestamp}. Target is ${target}. Reached: ${currentTimestamp >= target}`);
     } while (currentTimestamp < target);
 };
+
+export async function getFee(txP: Promise<{ receipt: TransactionReceipt, tx: string; logs: Log[] }>) {
+    const tx = await txP;
+    const gasAmount = new BN(tx.receipt.gasUsed);
+    const gasPrice = new BN((await web3.eth.getTransaction(tx.tx)).gasPrice);
+    return gasPrice.mul(gasAmount);
+}
