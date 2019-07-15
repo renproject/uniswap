@@ -4,20 +4,20 @@
 
 version: 2.1
 
-
-orbs:
-    core: ren/core@0.0.1
-
 executors:
   default:
     docker:
-      - image: circleci/node:10.16
+      - image: nikolaik/python-nodejs:python3.6-nodejs10
     working_directory: ~/contracts
 
 commands:
   install_deps:
     description: "Install dependencies"
     steps:
+      - run:
+          name: Install Vyper
+          command: |
+            pip install vyper
       # Download and cache dependencies
       - restore_cache:
           name: Restore node_modules
@@ -37,7 +37,6 @@ jobs:
     executor: default
     steps:
       - checkout
-      - core/install_vyper
       - install_deps
       - run:
           name: Run tests
