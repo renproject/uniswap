@@ -17,8 +17,7 @@ commands:
       - run:
           name: Install Vyper
           command: |
-            pip3.7 install vyper
-            vyper --version
+            pip install vyper
       # Download and cache dependencies
       - restore_cache:
           name: Restore node_modules
@@ -38,10 +37,6 @@ jobs:
     executor: default
     steps:
       - checkout
-      - run:
-          name: Install Vyper
-          command: |
-            pip install vyper
       - install_deps
       - run:
           name: Run tests
