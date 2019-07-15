@@ -21,10 +21,10 @@ commands:
       - run:
           name: Install Vyper
           command: |
-          pip3.7 install vyper
-          echo 'export PATH="$HOME/.local/bin:/usr/local/lib/python3.7/bin:$PATH"' >> $BASH_ENV
-          source $BASH_ENV
-          vyper --version
+            pip3.7 install vyper
+            echo 'export PATH="$HOME/.local/bin:/usr/local/lib/python3.7/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
+            vyper --version
       # Download and cache dependencies
       - restore_cache:
           name: Restore node_modules
