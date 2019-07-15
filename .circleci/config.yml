@@ -11,7 +11,7 @@ orbs:
 executors:
   default:
     docker:
-      - image: python3.7-nodejs12
+      - image: nikolaik/python-nodejs:latest
     working_directory: ~/contracts
 
 commands:
