@@ -42,7 +42,8 @@ jobs:
       - run:
           name: Run tests
           command: |
-            yarn run coverage
+            yarn run coverage && yarn run coveralls
+
 
 workflows:
   build:
