@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Install Vyper
           command: |
-            pip install --user vyper
+            sudo pip install vyper
       - install_deps
       - run:
           name: Run tests
